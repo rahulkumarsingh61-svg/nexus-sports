@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nexus Cricket Python App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-white min-h-screen p-6">
+  <h1 class="text-3xl font-bold mb-6 text-emerald-400">Cricket Match Center (Python + SQLite)</h1>
+  <div id="matches-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+
+  <script>
+    async function fetchMatches() {
+      const res = await fetch('/api/matches');
+      const data = await res.json();
+      const grid = document.getElementById('matches-grid');
+      
+      grid.innerHTML = data.matches.map(m => `
+        <div class="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow">
+          <span class="text-xs text-emerald-400 font-bold uppercase">${m.status}</span>
+          <h3 class="font-bold text-lg mt-1">${m.series}</h3>
+          <div class="my-3 flex justify-between font-mono text-sm">
+            <span>${m.teamA.name}: <b>${m.teamA.score}</b></span>
+            <span>${m.teamB.name}: <b>${m.teamB.score}</b></span>
+          </div>
+          <p class="text-xs text-slate-400">${m.liveText}</p>
+        </div>
+      `).join('');
+    }
+    fetchMatches();
+    setInterval(fetchMatches, 10000);
+  </script>
+</body>
+</html>
